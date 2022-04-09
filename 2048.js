@@ -11,8 +11,8 @@ function setGame() {
 
     board = [
         [0,0,0,0],
-        [4,0,0,0],
-        [0,0,16,0],
+        [0,0,0,0],
+        [0,0,0,0],
         [0,0,0,0]
     ]
 
@@ -46,6 +46,12 @@ function updateTile(tile, num) {
 document.addEventListener("keyup", (e) => {
     if(e.code == 'ArrowLeft'){
         slideLeft();
+    } else if(e.code == 'ArrowRight'){
+        slideRight();
+    } else if(e.code == 'ArrowUp'){
+        slideUp();
+    } else if(e.code == 'ArrowDown'){
+        slideDown();
     }
 })
 
@@ -54,10 +60,66 @@ function slideLeft() {
         let row = board[i];
         row = slide(row);
         board[i] = row;
+
+        for (let j=0; j < columns; j++){
+            let tile = document.getElementById(i.toString() + "-" + j.toString());
+            let num = board[i][j];
+            updateTile(tile,num);
+        }
     }
 }
 
-function slide() {
+function slideRight() {
+    for (let i = 0; i<rows; i++){
+        let row = board[i];
+        row.reverse();
+        row = slide(row);
+        row.reverse();
+        board[i] = row;
+
+        for (let j=0; j < columns; j++){
+            let tile = document.getElementById(i.toString() + "-" + j.toString());
+            let num = board[i][j];
+            updateTile(tile,num);
+        }
+    }
+}
+
+function slideUp() {
+    for (let j = 0; j<columns; j++){
+        let row = [board[0][j], board[1][j], board[2][j], board[3][j]];
+        row = slide(row);
+        // board[0][j] = row[0];
+        // board[1][j] = row[1];
+        // board[2][j] = row[2];
+        // board[3][j] = row[3];
+
+        for (let i=0; i < rows; i++){
+            board[i][j] = row[i];
+            let tile = document.getElementById(i.toString() + "-" + j.toString());
+            let num = board[i][j];
+            updateTile(tile,num);
+        }
+    }
+}
+
+function slideDown() {
+    for (let j = 0; j<columns; j++){
+        let row = [board[0][j], board[1][j], board[2][j], board[3][j]];
+        row.reverse();
+        row = slide(row);
+        row.reverse();
+
+        for (let i=0; i < rows; i++){
+            board[i][j] = row[i];
+            let tile = document.getElementById(i.toString() + "-" + j.toString());
+            let num = board[i][j];
+            updateTile(tile,num);
+        }
+    }
+}
+
+function slide(row) {
     row = filterZero(row);
 
     //slide and merge
@@ -73,7 +135,7 @@ function slide() {
 
     row = filterZero(row); // [4,2]
 
-    while(row.length < column) {
+    while(row.length < columns) {
         row.push(0);
     }
 
@@ -81,7 +143,7 @@ function slide() {
 }
 
 
-function filterZero() {
+function filterZero(row) {
     return row.filter(num => num != 0);
 }
 
