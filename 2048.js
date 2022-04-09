@@ -26,6 +26,9 @@ function setGame() {
             document.getElementById("board").append(tile);
         }
     }
+
+    setTwo();
+    setTwo();
 }
 
 function updateTile(tile, num) {
@@ -43,16 +46,53 @@ function updateTile(tile, num) {
     }
 }
 
+function hasEmptyTile() {
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
+            if (board[r][c] == 0) {
+                return true;
+            }
+        }
+    }
+}
+
+
+function setTwo() {
+
+    if (!hasEmptyTile()) {
+        return;
+    }
+    let found = false;
+    while (!found) {
+        //random function for row and column
+        let r = Math.floor(Math.random() * rows);
+        let c = Math.floor(Math.random() * columns);
+        if (board[r][c] == 0) {
+            board[r][c] = 2;
+            let tile = document.getElementById(r.toString() + "-" + c.toString());
+            tile.innerText = "2";
+            tile.classList.add("t2");
+            found = true;
+        }
+    }
+}
+
+
 document.addEventListener("keyup", (e) => {
     if(e.code == 'ArrowLeft'){
         slideLeft();
+        setTwo();
     } else if(e.code == 'ArrowRight'){
         slideRight();
+        setTwo();
     } else if(e.code == 'ArrowUp'){
         slideUp();
+        setTwo();
     } else if(e.code == 'ArrowDown'){
         slideDown();
+        setTwo();
     }
+    document.getElementById("score").innerText = score;
 })
 
 function slideLeft() {
@@ -142,8 +182,6 @@ function slide(row) {
     return row;
 }
 
-
-function filterZero(row) {
-    return row.filter(num => num != 0);
+function filterZero(row){
+    return row.filter(num => num != 0); //create new array of all nums != 0
 }
-
